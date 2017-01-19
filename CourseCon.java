@@ -12,6 +12,7 @@ import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
@@ -29,6 +30,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -63,9 +65,14 @@ public class CourseCon {
 
         config();
 
-        String info = cc.sendGet(ourvle + "webservice/rest/server.php?wstoken=" + token + "&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json");
-
-        id = parseID(getJsonObj(info));
+        String info;
+        info = cc.sendGet(ourvle + "webservice/rest/server.php?wstoken=" + token + "&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json");
+        while (info.equals("Fail")) {
+            JOptionPane.showMessageDialog(new JFrame(), "No Internet Connection!\nConnect to a valid network then click OK.");
+            info = cc.sendGet(ourvle + "webservice/rest/server.php?wstoken=" + token + "&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json");
+        }
+        JSONObject o = getJsonObj(info);
+        id = parseID(o);
 
         String sub = cc.sendGet(ourvle + "webservice/rest/server.php?wsfunction=core_enrol_get_users_courses&moodlewsrestformat=json&userid=" + id + "&wstoken=" + token);
 
@@ -97,17 +104,8 @@ public class CourseCon {
 
     }
 
-    public static void showNotification(String title, String msg,
-            String location) {
-        if (SystemTray.isSupported()) {
-            trayIcon.displayMessage(title, msg, TrayIcon.MessageType.INFO);
-            // this sets the location that should be opened when balloon is clicked.
-
-        }
-    }
-
     // HTTP GET request
-    private String sendGet(String url) throws Exception {
+    private String sendGet(String url) {
         try {
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -184,7 +182,6 @@ public class CourseCon {
 
     static JSONObject getJsonObj(String str) {
         JSONObject ob = new JSONObject(str);
-
         return ob;
     }
 
@@ -357,7 +354,8 @@ public class CourseCon {
                 FileWriter fw = new FileWriter(bat, true);
                 BufferedWriter bw = new BufferedWriter(fw);
                 PrintWriter wr = new PrintWriter(bw);
-                String line = "start /d \"C:\\Program Files\\CourseCon\\\" CourseCon.exe";
+                //String line = "start /d \"C:\\Program Files\\CourseCon\\\" CourseCon.exe";
+                String line = "start javaw -jar -Xms1024m -Xmx1024m \"C:\\Users\\" + user + "\\Documents\\CourseCon\\CourseCon.jar\"";
                 wr.println(line);
                 wr.close();
 
@@ -426,13 +424,16 @@ public class CourseCon {
         }
     }
 
-    static void trayView() {
+    static void trayView() throws IOException {
         trayIcon = null;
         if (SystemTray.isSupported()) {
             // get the SystemTray instance
             SystemTray tray = SystemTray.getSystemTray();
             // load an image
-            Image image = Toolkit.getDefaultToolkit().getImage("image/1755153.jpg");
+            URL m = CourseCon.class.getResource("1755153.jpg");
+            BufferedImage background;
+            background = ImageIO.read(CourseCon.class.getResource("1755153.jpg"));
+            Image image = (Image)background;
             // create a action listener to listen for default action executed on the tray icon
 
             ActionListener men = new ActionListener() {
@@ -449,7 +450,7 @@ public class CourseCon {
             popup.add(defaultItem);
             /// ... add other items
             // construct a TrayIcon
-            trayIcon = new TrayIcon(image, "Tray Demo", popup);
+            trayIcon = new TrayIcon(image, "CourseCon", popup);
             // set the TrayIcon properties
 
             // ...
