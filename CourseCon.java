@@ -57,7 +57,7 @@ public class CourseCon {
         try {
             trayView();
         } catch (NullPointerException e) {
-          
+
         }
         createBat();
 
@@ -75,8 +75,6 @@ public class CourseCon {
         while (EOF == 0) {
             parseSubjects(subs);
             String s = "";
-            System.out.println(count);
-            System.out.println(newDownloads.get(0));
             if (count > 0) {
                 for (int f = 0; f < count; f++) {
                     s += "" + newDownloads.get(f) + "....";
@@ -222,7 +220,7 @@ public class CourseCon {
             File file = new File(path);
             file.mkdir();
             subFld(name, subjectId);
-            
+
         }
     }
 
@@ -270,7 +268,9 @@ public class CourseCon {
 
                     fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
                     count += 1;
-                    newDownloads.add(fld);
+                    if (!(newDownloads.contains(fld))) {
+                        newDownloads.add(fld);
+                    }
 
                 }
 
