@@ -76,7 +76,7 @@ public class CourseCon {
             parseSubjects(subs);
             String s = "";
             if (count > 0) {
-                for (int f = 0; f < count; f++) {
+                for (int f = 0; f < newDownloads.size(); f++) {
                     s += "" + newDownloads.get(f) + "....";
                 }
                 String m = "New files have been added to:" + s;
