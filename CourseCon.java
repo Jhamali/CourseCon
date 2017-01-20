@@ -282,7 +282,7 @@ public class CourseCon {
     static void config() throws Exception {
 
         String result = "";
-        subJson = new File("C:\\Users\\" + user + "\\Documents\\Http\\config.json");
+        subJson = new File("C:\\Users\\" + user + "\\Documents\\CourseConFiles\\config.json");
         if (subJson.exists()) {
 
             try {
@@ -403,7 +403,7 @@ public class CourseCon {
 
         try {
 
-            File dir = new File("C:\\Users\\dubze\\Documents\\Http");
+            File dir = new File("C:\\Users\\dubze\\Documents\\CourseConFiles");
             dir.mkdir();
             Writer output = null;
 
