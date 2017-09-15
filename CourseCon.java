@@ -383,8 +383,10 @@ public class CourseCon {
                 PrintWriter wr = new PrintWriter(bw);
                 //String line = "start /d \"C:\\Program Files\\CourseCon\\\" CourseCon.exe";
                 //String line = "start javaw -jar -Xms1024m -Xmx1024m \"C:\\Users\\" + user + "\\Documents\\CourseCon\\CourseCon.jar\"";
-                String line = "C:\\Users\\" + user + "\\AppData\\Local\\CourseCon\\CourseCon.exe";
+                String line = "start C:\\Users\\" + user + "\\AppData\\Local\\CourseCon\\CourseCon.exe";
+                String line2 = "exit";
                 wr.println(line);
+                wr.println(line2);
                 wr.close();
 
             } catch (IOException e) {
